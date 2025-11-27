@@ -140,10 +140,17 @@ def bioio_napari_reader(path: str) -> list[Any]:
     """
 
     def _get_scale(metadata):
-        scale = None
+        scale = []
         if metadata.images[0].pixels:
             px_data = img.metadata.images[0].pixels
-            scale = [px_data.physical_size_z, px_data.physical_size_y, px_data.physical_size_x]
+            if px_data.physical_size_z:
+                scale.append(px_data.physical_size_z)
+            if px_data.physical_size_y:
+                scale.append(px_data.physical_size_y)
+            if px_data.physical_size_x:
+                scale.append(px_data.physical_size_x)
+        if len(scale) == 0:
+            scale = None
         return scale
         
     def _extract_scene_name(img, scene_id: str, scene_idx: int) -> str:
