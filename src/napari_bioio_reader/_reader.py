@@ -139,6 +139,13 @@ def bioio_napari_reader(path: str) -> list[Any]:
     Scene name: Background
     """
 
+    def _get_scale(metadata):
+        scale = None
+        if metadata.images[0].pixels:
+            px_data = img.metadata.images[0].pixels
+            scale = [px_data.physical_size_z, px_data.physical_size_y, px_data.physical_size_x]
+        return scale
+        
     def _extract_scene_name(img, scene_id: str, scene_idx: int) -> str:
         """
         Extract scene name from metadata, fallback to numbered name.
@@ -240,8 +247,9 @@ def bioio_napari_reader(path: str) -> list[Any]:
     # If only one scene, use the original naming
     if len(available_scenes) == 1:
         data = img.data
-        meta = {"name": base_name, "metadata": img.metadata}
+        meta = {"name": base_name, "metadata": img.metadata, "scales": _get_scale(img.metadata)}
         layers.append((data, meta, "image"))
+        
     else:
         # Multiple scenes: create a layer for each scene
         for scene_idx, scene_id in enumerate(available_scenes):
@@ -261,9 +269,12 @@ def bioio_napari_reader(path: str) -> list[Any]:
                         "scene_index": scene_idx,
                         "scene_name": scene_name,
                         "total_scenes": len(available_scenes),
+                        "scales": _get_scale(img.metadata)
+                        
                     },
                 },
             }
+
             layers.append((data, meta, "image"))
 
     return layers
