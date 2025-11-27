@@ -247,7 +247,7 @@ def bioio_napari_reader(path: str) -> list[Any]:
     # If only one scene, use the original naming
     if len(available_scenes) == 1:
         data = img.data
-        meta = {"name": base_name, "metadata": img.metadata, "scales": _get_scale(img.metadata)}
+        meta = {"name": base_name, "metadata": img.metadata, "scale": _get_scale(img.metadata)}
         layers.append((data, meta, "image"))
         
     else:
@@ -269,7 +269,7 @@ def bioio_napari_reader(path: str) -> list[Any]:
                         "scene_index": scene_idx,
                         "scene_name": scene_name,
                         "total_scenes": len(available_scenes),
-                        "scales": _get_scale(img.metadata)
+                        "scale": _get_scale(img.metadata)
                         
                     },
                 },
