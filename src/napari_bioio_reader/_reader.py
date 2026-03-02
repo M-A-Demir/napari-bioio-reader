@@ -140,17 +140,33 @@ def bioio_napari_reader(path: str) -> list[Any]:
     """
 
     def _get_scale(metadata):
+        """
+        Extract physical pixel sizes from metadata, if available.
+
+        Returns a list [z, y, x] or None if the scale cannot be determined.
+        """
         scale = []
-        if metadata.images[0].pixels:
-            px_data = metadata.images[0].pixels
-            if px_data.physical_size_z:
+        try:
+            images = getattr(metadata, "images", None)
+            if not images:
+                return None
+
+            first_image = images[0]
+            px_data = getattr(first_image, "pixels", None)
+            if px_data is None:
+                return None
+
+            if getattr(px_data, "physical_size_z", None) is not None:
                 scale.append(px_data.physical_size_z)
-            if px_data.physical_size_y:
+            if getattr(px_data, "physical_size_y", None) is not None:
                 scale.append(px_data.physical_size_y)
-            if px_data.physical_size_x:
+            if getattr(px_data, "physical_size_x", None) is not None:
                 scale.append(px_data.physical_size_x)
-        if len(scale) == 0:
-            scale = None
+        except (AttributeError, IndexError, TypeError):
+            return None
+
+        if not scale:
+            return None
         return scale
         
     def _extract_scene_name(img, scene_id: str, scene_idx: int) -> str:
