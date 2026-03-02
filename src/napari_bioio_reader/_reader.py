@@ -142,7 +142,7 @@ def bioio_napari_reader(path: str) -> list[Any]:
     def _get_scale(metadata):
         scale = []
         if metadata.images[0].pixels:
-            px_data = img.metadata.images[0].pixels
+            px_data = metadata.images[0].pixels
             if px_data.physical_size_z:
                 scale.append(px_data.physical_size_z)
             if px_data.physical_size_y:
