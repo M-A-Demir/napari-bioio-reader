@@ -143,7 +143,13 @@ def bioio_napari_reader(path: str) -> list[Any]:
         """
         Extract physical pixel sizes from metadata, if available.
 
-        Returns a list [z, y, x] or None if the scale cannot be determined.
+        Returns
+        -------
+        list[float] or None
+            A list of available physical pixel sizes in ``[z, y, x]`` order.
+            Only axes with a defined physical size are included, so the list
+            may have length 1–3 (e.g. ``[y, x]`` or ``[x]``). Returns ``None``
+            if no physical pixel sizes can be determined.
         """
         scale = []
         try:
