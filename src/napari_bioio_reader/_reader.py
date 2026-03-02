@@ -322,7 +322,6 @@ def bioio_napari_reader(path: str) -> list[Any]:
                         "scene_name": scene_name,
                         "total_scenes": len(available_scenes),
                         "scale": _get_scale(img.metadata)
-                        
                     },
                 },
             }
