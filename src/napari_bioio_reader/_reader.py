@@ -174,7 +174,6 @@ def bioio_napari_reader(path: str) -> list[Any]:
         if not scale:
             return None
         return scale
-        
     def _extract_scene_name(img, scene_id: str, scene_idx: int) -> str:
         """
         Extract scene name from metadata, fallback to numbered name.
